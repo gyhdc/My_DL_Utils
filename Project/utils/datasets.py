@@ -43,15 +43,13 @@ class CustomImageDataset(Dataset):
                     image = self.transform(image)
                 res.append((image, class_idx))
             return res
+        else:
+            img_path, class_idx = self.img_paths[idx]
+            image = Image.open(img_path).convert('RGB')
+            if self.transform is not None:
+                image = self.transform(image)
+            return image, class_idx
             
-
-
-        img_path, class_idx = self.img_paths[idx]
-        image = Image.open(img_path).convert('RGB')
-        
-        if self.transform is not None:
-            image = self.transform(image)
-        return image, class_idx
 from torchvision.transforms import ToTensor#用于把图片转化为张量
 import numpy as np#用于将张量转化为数组，进行除法
 from torchvision.datasets import ImageFolder#用于导入图片数据集
