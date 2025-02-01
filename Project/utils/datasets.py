@@ -33,7 +33,7 @@ class CustomImageDataset(Dataset):
         self.classes = classes
         self.class_to_idx = {cls: idx for idx, cls in enumerate(self.classes)}#根据类别获取索引
         self.img_paths = self.get_image_paths()#每个图像和对应的索引对
-        self.check_datadir(self.check_datadir)
+        #self.check_datadir(self.check_datadir)
     def check_datadir(self,dir_path):
         if not os.path.exists(dir_path):
             os.makedirs(self.data_dir)
