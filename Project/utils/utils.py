@@ -5,11 +5,25 @@ import torch
 
 
 class Config:
+    '''
+        config类，用于记录训练参数和系统配置
+        将json（字典）转为config的成员变量
+        读取时，传入文件路径，自动读取
+        保存时，传入文件路径，自动保存
+        参数：
+            config：json数据，字典类型，所有参数都保存在这里
+            config.key：通过成员变量的方式，获取config的key对应的value
+
+    '''
     def __init__(self,*l_params,**params):
+        '''
+            传入的数据，将json转为成员变量
+        '''
         if len(params) == 0 and len(l_params) == 1 and isinstance(l_params[-1], str):
+            #只传入文件路径，则读取
             self.read(l_params[-1])
         else:
-            self.config = params
+            self.config = params#维护一个json（字典数据）
             self.set_attr()
     def update(self,**params):
         self.config.update(params)
@@ -34,12 +48,18 @@ class Config:
             res.append(f"{key} : {val} ")
         return "\n".join(res)
     def set_attr(self,):
+        '''设置字典为成员变量'''
         for key, value in self.config.items():
-            setattr(self, key, value)#设置字典为成员变量
+            setattr(self, key, value)
 
 
 class BestSelector:
-
+    '''
+        记录最佳指标，json转为成员变量，包括模型（路径）保存和加载
+        参数：
+            bestMetrics：json数据，字典类型，所有参数都保存在这里
+            bestMetrics.key：通过成员变量的方式，获取bestMetrics的key对应的value
+    '''
     def __init__(self, *l_params,**params):
         self.metrics_path=None
         if len(params) == 0 and len(l_params) == 1 and isinstance(l_params[-1], str):
@@ -110,6 +130,12 @@ class BestSelector:
 
 
 class Logs:
+    '''
+        记录训练日志，json转为成员变量，包括模型（路径）保存和加载
+        参数：
+            logs：json数据，字典类型，所有参数都保存在这里
+            logs.key：通过成员变量的方式，获取logs的key对应的value
+    '''
     def __init__(self,*l_params,**params):
 
         if len(params)==0 and len(l_params)==1 and isinstance(l_params[-1],str):
@@ -137,12 +163,10 @@ class Logs:
         for key, value in self.logs.items():
             setattr(self, key, value)#设置字典为成员变量
     def __str__(self):#展示config
-
         res=[]
         for key,val in self.logs.items():
             # print(key,val)
             res.append(f"{key} : {type(val)} ")
-
         return "\n".join(res)
     def __repr__(self):#展示config
         res=[]
@@ -153,7 +177,6 @@ def saveProcess(saveDir,bestMod,train_log,config):
     print(saveDir)
     if not os.path.exists(saveDir):
         os.mkdir(saveDir)
-
     bestMod.save(saveDir)
     config.save(saveDir)
     train_log.save(saveDir)
